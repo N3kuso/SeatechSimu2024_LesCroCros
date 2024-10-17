@@ -5,9 +5,9 @@
 from controller import Robot, Motor, DistanceSensor, GPS
 import time
 
-vitesse_max = 10.0
-vitesse_sharp = 9.9
-vitesse_min = 8.0
+vitesse_max = 12.3
+vitesse_sharp = 12.2
+vitesse_min = 10.3
 vitesse_slow = 1
 
 class Motors():
