@@ -25,10 +25,10 @@ class Motors():
     K_ROLL_P = 50.0           # P constant of the roll PID.
     K_PITCH_P = 30.0          # P constant of the pitch PID.
 
-    MAX_YAW_DISTURBANCE = 0.4
-    MAX_PITCH_DISTURBANCE = -1
+    MAX_YAW_DISTURBANCE = 0.4 # 0.4 par défaut
+    MAX_PITCH_DISTURBANCE = -1 #-1 par défaut
     # Precision between the target position and the robot position in meters
-    target_precision = 0.5
+    target_precision = 0.5 # 0.5 par défaut
 
     ### Constructeur par défaut
     def __init__(self, robot:Robot):
@@ -63,7 +63,7 @@ class Motors():
             pos (list): [X,Y,Z,yaw,pitch,roll] current absolute position and angles
         """
         self.current_pose = pos
-        print(self.current_pose)
+        #print(self.current_pose)
     
     def move_to_target(self, waypoints, verbose_movement=False, verbose_target=False):
         """
@@ -114,14 +114,14 @@ class Motors():
                 (self.target_position[1] - self.current_pose[1]) ** 2))
             print("remaning angle: {:.4f}, remaning distance: {:.4f}".format(
                 angle_left, distance_left))
-        return yaw_disturbance, pitch_disturbance
+        return 10*yaw_disturbance, pitch_disturbance
 
     ### Méthode permettant aux moteurs d'effectuer un décollage    
     def take_off(self, robot:Robot):
 
         # Specify the patrol coordinates
-        waypoints = [[0,0]]
-        self.target_altitude = 5 # Altitude à atteindre
+        waypoints = [[-49, 71], [-57.5, 80.2], [-74.8, 82], [-74.8, 68.3], [-74.5, 58], [-66.7, 58], [-61, 65.4], [-61, 72.7]]
+        self.target_altitude = 15 # Altitude à atteindre
 
         roll_disturbance = 0
         pitch_disturbance = 0
@@ -136,9 +136,8 @@ class Motors():
 
         if altitude > self.target_altitude - 1:
             # as soon as it reach the target altitude, compute the disturbances to go to the given waypoints.
-            print(f"Robot : {robot.getTime()} || t1 : {self.t1}")
+            #print(f"Robot : {robot.getTime()} || t1 : {self.t1}")
             if robot.getTime() - self.t1 > 0.1:
-                print("UwU")
                 yaw_disturbance, pitch_disturbance = self.move_to_target(
                     waypoints,verbose_movement=True,verbose_target=True)
                 self.t1 = robot.getTime()

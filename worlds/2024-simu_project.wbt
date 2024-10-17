@@ -5,7 +5,6 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Parquetry.proto"
 EXTERNPROTO "../protos/RoadLine.proto"
-EXTERNPROTO "../protos/SolidRoundedBox.proto"
 EXTERNPROTO "../protos/SolidPipe1.proto"
 EXTERNPROTO "../protos/SolidPipe2.proto"
 EXTERNPROTO "../protos/SolidPipe3.proto"
@@ -18,8 +17,12 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/traffic/protos/TrafficCone.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/traffic/protos/HighwayPole.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/traffic/protos/HighwaySign.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/road/protos/RoadPillars.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/solids/protos/SolidBox.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/dji/mavic/protos/Mavic2Pro.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/adept/pioneer3/protos/Pioneer3dx.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/humans/pedestrian/protos/Pedestrian.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/bathroom/protos/Toilet.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/husarion/rosbot/protos/Rosbot.proto"
 
 WorldInfo {
   basicTimeStep 20
@@ -27,8 +30,8 @@ WorldInfo {
   }
 }
 Viewpoint {
-  orientation -0.16864890364588697 0.06796148773394411 0.9833304548746719 2.362679169893373
-  position 44.68172510304538 -40.559513418242034 25.891694300704227
+  orientation -0.23419159097760062 0.08491229887440703 0.968475193391779 2.4660279309582926
+  position 69.5320556061075 -57.73397021346234 62.863537166053206
 }
 TexturedBackgroundLight {
 }
@@ -248,15 +251,13 @@ Road {
   leftBorderBoundingObject TRUE
 }
 RubberDuck {
-  hidden linearVelocity_0 0.003361459044483847 -0.0034701548490382273 0.0007347593144009888
-  hidden angularVelocity_0 0.011510751355271244 0.011150199594119548 -1.2324236088684394e-11
-  translation -43.704597175200405 31.577247580501414 4.71491436723274
-  rotation 0.0007526043745960315 0.0017768370728722448 -0.9999981382166028 0.8013088043260654
+  translation -43.70474805279495 31.57740333848705 4.7149111622253
+  rotation 0.00033344761440367535 0.0007872424224948314 -0.9999996345309616 0.8013077285844065
   scale 14
 }
 RubberDuck {
-  translation 6.761839173700133 -9.708543554539244 0.44271073731521793
-  rotation -0.00019387376830402227 -2.2973869578122066e-05 0.9999999809425815 -2.905693622469094
+  translation 6.762306660929392 -9.708690867703938 0.4427107372551991
+  rotation -0.00019387379871114755 -2.2974327341233103e-05 0.999999980942565 -2.905689949893886
   name "rubber duck(1)"
   scale 30
 }
@@ -270,10 +271,39 @@ TrafficCone {
   name "traffic cone(1)"
 }
 RubberDuck {
-  hidden linearVelocity_0 0.02098173943210085 0.020315456509627714 -0.0010346150218253141
-  hidden angularVelocity_0 -0.06470168375905527 0.06679670795875164 1.4762365443873366e-05
-  translation -15.025171654771302 33.04800688748941 4.730568576096409
-  rotation -0.0003070808275802952 0.0007635672208920141 0.999999661333175 0.7693511186174965
+  translation -15.01038745349788 33.06227130552354 4.730602209101425
+  rotation -0.0004445428226818525 0.0011014109028894758 0.9999992946376022 0.7697456945254774
   name "rubber duck(2)"
   scale 18
+}
+Mavic2Pro {
+  translation -47 57 0.1
+  rotation 0.034739645580305255 -0.07932021561833945 0.9962436752216873 1.552
+  controller "monde3_controller"
+  controllerArgs [
+    ""
+  ]
+}
+Pioneer3dx {
+  translation -15 -15.5 0.1
+  controller "monde1_controller"
+  extensionSlot [
+    Pedestrian {
+      bodySlot [
+        Toilet {
+        }
+      ]
+    }
+    GPS {
+    }
+  ]
+}
+Rosbot {
+  translation -16 23 0.03
+  rotation 0 0 1 2.354
+  controller "monde2_controller"
+  lidarSlot [
+    GPS {
+    }
+  ]
 }

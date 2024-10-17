@@ -151,7 +151,7 @@ class Captors():  #PositionSensor, DistanceSensor, RangeFinder, Camera, GPS
     
     def getCoordo_gps(self):
         coordo = (self.gps.getValues() )  
-        print(coordo)
+        #print(coordo)
         self.x_gps = coordo[1]
         self.y_gps = coordo[2]
         return coordo
@@ -217,36 +217,36 @@ class DuduRobot(Robot):
     def eviter_obstacle(self):
 
         if (robot.verif_dt() < 2) and (robot.verif_gh() < 2):
-            print('detection mur avant')
+            #print('detection mur avant')
             robot.motors.stop()
             robot.motors.back_straight()
 
         elif (robot.verif_ar_dt() < 0.5) and (robot.verif_ar_gh() < 0.5):
-            print('detection mur arrière')
+            #print('detection mur arrière')
             
             robot.motors.stop()
             robot.motors.go_straight()
 
         elif robot.verif_gh() < 2:
-            print('obstacle a gauche')
+            #print('obstacle a gauche')
 
 
             robot.motors.go_droite()
 
         elif robot.verif_dt() < 2 :
-            print('obstacle a droite')
+            #print('obstacle a droite')
 
 
             robot.motors.go_gauche()
 
         elif robot.verif_ar_dt() < 1:
-            print('obstacle a droite')
+            #print('obstacle a droite')
 
 
             robot.motors.back_gauche()
 
         elif robot.verif_ar_gh() < 1:
-            print('obstacle a gauche')
+            #print('obstacle a gauche')
 
 
             robot.motors.back_droite()
