@@ -139,7 +139,7 @@ class Motors():
             #print(f"Robot : {robot.getTime()} || t1 : {self.t1}")
             if robot.getTime() - self.t1 > 0.1:
                 yaw_disturbance, pitch_disturbance = self.move_to_target(
-                    waypoints,verbose_movement=True,verbose_target=True)
+                    waypoints,verbose_movement=False,verbose_target=False)
                 self.t1 = robot.getTime()
 
         # Calcule les inputs de Roll, Pitch, Yaw
