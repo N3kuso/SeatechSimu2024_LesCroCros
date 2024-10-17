@@ -2,12 +2,13 @@
 
 # You may need to import some classes of the controller module. Ex:
 #  from controller import Robot, Motor, DistanceSensor
-from controller import Robot, Motor, DistanceSensor
+from controller import Robot, Motor, DistanceSensor, GPS
 import time
 
 vitesse_max = 10.0
-vitesse_sharp = 9.0
+vitesse_sharp = 9.9
 vitesse_min = 8.0
+vitesse_slow = 1
 
 class Motors():
     right_wheel = None
@@ -34,23 +35,27 @@ class Motors():
         self.left_wheel.setVelocity(-vitesse_max)
 
     # Aller sur la gauche
-    def left(self):
+    def right(self):
         self.right_wheel.setVelocity(vitesse_max)
         self.left_wheel.setVelocity(vitesse_min)
 
     # Aller sur la droite
-    def right(self):
+    def left(self):
         self.right_wheel.setVelocity(vitesse_min)
         self.left_wheel.setVelocity(vitesse_max)
 
     # Pour le pont
     def sharp_right(self):
-        self.right_wheel.setVelocity(vitesse_sharp)
-        self.left_wheel.setVelocity(vitesse_max)
+        self.right_wheel.setVelocity(vitesse_max)
+        self.left_wheel.setVelocity(vitesse_sharp)
+
+    # Pour le pont (ralentir)
+    def slow(self):
+        self.right_wheel.setVelocity(vitesse_slow)
+        self.left_wheel.setVelocity(vitesse_slow)
 
 class Sensors(Robot):
     sensors_names = [f'so{i}' for i in range(16)]
-
     sensors = {}
 
     def __init__(self, robot:Robot):
@@ -70,6 +75,17 @@ class Sensors(Robot):
     
     def get_Distance_Value_SO_5 (self):
         return self.sensors['SO_5'].getValue() # Capteur avant droit
+    
+class GPS(Robot):
+    coordonnees_gps = None
+
+    def __init__(self, robot:Robot):
+        coordonnees_gps:GPS = robot.getDevice('gps')
+        coordonnees_gps.enable(int(robot.getBasicTimeStep()))
+        self.coordonnees_gps = coordonnees_gps
+
+    def get_GPS_Position(self):
+        return self.coordonnees_gps.getValues()
 
 
 class RobotAnnexe(Robot):
@@ -78,34 +94,35 @@ class RobotAnnexe(Robot):
         super().__init__()
         self.motors = Motors(self)
         self.sensors = Sensors(self)
+        self.gps = GPS(self)
 
-    def run(self):
+    def run(self, start_time):
         #self.motors.straight()
         val_SO_0 = self.sensors.get_Distance_Value_SO_0()
         val_SO_7 = self.sensors.get_Distance_Value_SO_7()
         val_SO_2 = self.sensors.get_Distance_Value_SO_2()
         val_SO_5 = self.sensors.get_Distance_Value_SO_5()
-        print({'Avant gauche': val_SO_2, 
-              'Avant droit': val_SO_5, 
-              'Droit': val_SO_0,
-              'Gauche': val_SO_7})
-        #if val_SO_2 > 0:
-        #    self.motors.left()
-        #elif val_SO_5 > 0:
-        #    self.motors.right()
-        if val_SO_0 < 830 or val_SO_7 > 870 or val_SO_0 == 0 or val_SO_5 > 0:
-            self.motors.right()
-        elif val_SO_0 > 870 or val_SO_7 < 830 or val_SO_7 == 0 or val_SO_2 > 0:
-            self.motors.left()
-        elif 830 < val_SO_0 < 870 and 830 < val_SO_7 < 870 or val_SO_2 == 0 and val_SO_5 == 0:
-            self.motors.straight()
-        elif val_SO_7 == 0 and val_SO_5 < 850 and val_SO_0 == 0 and val_SO_2 == 0:
-            self.motors.left()
-        elif val_SO_7 < 850 and val_SO_5 == 0 and val_SO_0 == 0 and val_SO_2 == 0:
-            self.motors.right()
-        elif val_SO_7 == 0 and val_SO_5 == 0 and val_SO_0 == 0 and val_SO_2 == 0:
-            self.motors.straight()
-        
+        GPS_position = self.gps.get_GPS_Position()
+
+        #print({'Avant gauche': val_SO_2, 
+        #      'Avant droit': val_SO_5, 
+        #      'Droit': val_SO_0,
+        #      'Gauche': val_SO_7})
+        #print(GPS_position[1])
+
+        if GPS_position[2] < 0.1:
+            if val_SO_0 < 830 or val_SO_7 > 870 or val_SO_0 == 0 or val_SO_5 > 0:
+                self.motors.left()
+            elif val_SO_0 > 870 or val_SO_7 < 830 or val_SO_7 == 0 or val_SO_2 > 0:
+                self.motors.right()
+            elif 830 < val_SO_0 < 870 and 830 < val_SO_7 < 870 or val_SO_2 == 0 and val_SO_5 == 0:
+                self.motors.straight()
+        elif GPS_position[2] >= 0.1:
+            #end_time = time.perf_counter()
+            #time_total = end_time - start_time
+            #print(time_total)
+            self.motors.sharp_right()
+
     
 
 # create the Robot instance.
@@ -120,7 +137,7 @@ timestep = int(robot.getBasicTimeStep())
 #  ds = robot.getDevice('dsname')
 #  ds.enable(timestep)
 
-
+start_time = time.perf_counter()
 
 # Main loop:
 # - perform simulation steps until Webots is stopping the controller
@@ -128,7 +145,7 @@ while robot.step(timestep) != -1:
     # Read the sensors:
     # Enter here functions to read sensor data, like:
     #  val = ds.getValue()
-    robot.run()
+    robot.run(start_time)
     # Process sensor data here.
 
     # Enter here functions to send actuator commands, like:
