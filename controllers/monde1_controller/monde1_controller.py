@@ -96,8 +96,7 @@ class RobotAnnexe(Robot):
         self.sensors = Sensors(self)
         self.gps = GPS(self)
 
-    def run(self, start_time):
-        #self.motors.straight()
+    def run(self):
         val_SO_0 = self.sensors.get_Distance_Value_SO_0()
         val_SO_7 = self.sensors.get_Distance_Value_SO_7()
         val_SO_2 = self.sensors.get_Distance_Value_SO_2()
@@ -118,9 +117,6 @@ class RobotAnnexe(Robot):
             elif 830 < val_SO_0 < 870 and 830 < val_SO_7 < 870 or val_SO_2 == 0 and val_SO_5 == 0:
                 self.motors.straight()
         elif GPS_position[2] >= 0.1:
-            #end_time = time.perf_counter()
-            #time_total = end_time - start_time
-            #print(time_total)
             self.motors.sharp_right()
 
     
@@ -137,15 +133,13 @@ timestep = int(robot.getBasicTimeStep())
 #  ds = robot.getDevice('dsname')
 #  ds.enable(timestep)
 
-start_time = time.perf_counter()
-
 # Main loop:
 # - perform simulation steps until Webots is stopping the controller
 while robot.step(timestep) != -1:
     # Read the sensors:
     # Enter here functions to read sensor data, like:
     #  val = ds.getValue()
-    robot.run(start_time)
+    robot.run()
     # Process sensor data here.
 
     # Enter here functions to send actuator commands, like:
